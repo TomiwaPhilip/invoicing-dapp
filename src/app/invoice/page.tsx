@@ -22,10 +22,17 @@ export default function Home() {
       {/* Subscription Status */}
       <Subscription onSubscriptionUpdate={setIsSubscribed} />
 
-      {/* Invoice Form & List */}
+      {/* Invoice Section */}
       <div className="mt-10 w-full max-w-5xl flex flex-col lg:flex-row gap-6">
-        <InvoiceForm onInvoiceCreated={() => setRefresh(!refresh)} />
-        <InvoiceList refresh={!refresh} isSubscribed={isSubscribed} />
+        {/* Invoice Form */}
+        <div className="w-full lg:w-1/2 bg-white shadow-md rounded-lg p-6 max-h-[400px] overflow-y-auto">
+          <InvoiceForm onInvoiceCreated={() => setRefresh(!refresh)} />
+        </div>
+
+        {/* Invoice List */}
+        <div className="w-full lg:w-1/2 bg-white shadow-md rounded-lg p-6 max-h-[400px] overflow-y-auto">
+          <InvoiceList refresh={!refresh} isSubscribed={isSubscribed} />
+        </div>
       </div>
     </main>
   );
