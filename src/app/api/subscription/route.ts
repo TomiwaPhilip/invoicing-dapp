@@ -9,27 +9,22 @@ export async function POST(req: Request) {
     const { userAddress, customerEmail } = await req.json();
     await connectDB();
 
-    // Initialize Mileston PaymentLink using your API key and Business ID
     const apiKey = process.env.MILESTON_API_KEY || "";
     const businessId = process.env.MILESTON_BUSINESS_ID || "";
     const paymentLinkSDK = new PaymentLink(apiKey, businessId);
 
-    // Create the payment link payload
     const createPaymentPayload = {
-      amount: "10.00", // Subscription amount ($10/month)
+      amount: "10.00",
       description: "Premium Subscription Payment",
-      customerEmail: customerEmail || "customer@example.com", // Provide a valid email if available
+      customerEmail: customerEmail || "customer@example.com",
     };
 
-    // Create the payment link using the SDK
     const paymentLinkResponse = await paymentLinkSDK.create(
       createPaymentPayload
     );
 
-    // Extract the generated payment link
     const paymentLink = paymentLinkResponse.paymentLink;
 
-    // Set subscription expiry (1 month from now)
     const expiresAt = new Date();
     expiresAt.setMonth(expiresAt.getMonth() + 1);
 

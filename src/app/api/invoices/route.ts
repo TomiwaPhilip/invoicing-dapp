@@ -99,7 +99,7 @@ export async function POST(req: Request) {
 
     console.log("Processing invoice creation for");
 
-    // 1. Generate the Mileston invoice link.
+    // Generate the Mileston invoice link.
     const invoiceLink = await generateMilestonInvoice({
       clientName,
       clientEmail,
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Save the invoice details (including the Mileston link) to the database.
+    // Save the invoice details (including the Mileston link) to the database.
     const newInvoice = await saveInvoiceToDB(
       { userAddress, clientName, clientEmail, amount, currency },
       invoiceLink

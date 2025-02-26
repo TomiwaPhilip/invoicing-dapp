@@ -40,7 +40,6 @@ export default function InvoiceList({
         const res = await fetch(`/api/invoices?userAddress=${account.address}`);
         const data: InvoiceData[] = await res.json();
 
-        // If Mileston API credentials are provided, update invoice status via Mileston SDK
         if (milestonApiKey && businessId) {
           const invoiceApi = new MilestonInvoice(milestonApiKey, businessId);
           const updatedInvoices = await Promise.all(
@@ -49,7 +48,7 @@ export default function InvoiceList({
                 try {
                   const response = await invoiceApi.get(invoice.invoiceLink);
                   console.log("Mileston Invoice Response ok");
-                  // Assuming response contains a status field (e.g., "paid" or "pending")
+
                   const status = (response as any)?.status || "pending";
                   return { ...invoice, status };
                 } catch (error) {

@@ -5,7 +5,6 @@ const businessId: string = process.env.MILESTON_BUSINESS_ID ?? "semilogopaul";
 const businessName: string =
   process.env.MILESTON_BUSINESS_NAME ?? "semilogopaul";
 
-// Ensure your API credentials exist
 if (!apiKey || !businessId) {
   throw new Error(
     "Mileston API credentials are missing in environment variables."
