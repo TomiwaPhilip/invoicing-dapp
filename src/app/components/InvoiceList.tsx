@@ -98,13 +98,13 @@ export default function InvoiceList({
               <p className="text-sm text-gray-500">
                 {new Date(invoice.createdAt).toLocaleString()}
               </p>
-              <p
+              {/* <p
                 className={`mt-2 font-medium ${
                   invoice.status === "paid" ? "text-green-600" : "text-red-500"
                 }`}
               >
                 {invoice.status === "paid" ? "Paid" : "Pending"}
-              </p>
+              </p> */}
             </li>
           ))}
         </ul>
