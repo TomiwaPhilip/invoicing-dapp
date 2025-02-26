@@ -12,9 +12,6 @@ if (!apiKey || !businessId) {
   );
 }
 
-console.log("Mileston API Key:", apiKey);
-console.log("Mileston Business ID:", businessId);
-
 export async function createMilestonInvoice({
   clientName,
   clientEmail,
@@ -27,9 +24,7 @@ export async function createMilestonInvoice({
   currency: string;
 }): Promise<{ invoiceLink: string } | null> {
   try {
-    console.log(
-      `Creating Mileston invoice for ${clientEmail}, Amount: ${amount} ${currency}`
-    );
+    console.log("Creating Mileston invoice");
 
     const formattedAmount = parseFloat(amount.toString()).toFixed(2);
 
@@ -41,10 +36,7 @@ export async function createMilestonInvoice({
       dueDate: new Date(),
     });
 
-    console.log(
-      "Mileston API Full Response:",
-      JSON.stringify(response, null, 2)
-    );
+    console.log("Mileston API Full Response ok");
 
     if (!response || !response.invoiceLink) {
       console.error("Mileston response is missing an invoice link.");

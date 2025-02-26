@@ -48,7 +48,7 @@ export default function InvoiceList({
               if (invoice.invoiceLink) {
                 try {
                   const response = await invoiceApi.get(invoice.invoiceLink);
-                  console.log("Mileston Invoice Response:", response);
+                  console.log("Mileston Invoice Response ok");
                   // Assuming response contains a status field (e.g., "paid" or "pending")
                   const status = (response as any)?.status || "pending";
                   return { ...invoice, status };

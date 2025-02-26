@@ -70,7 +70,7 @@ export async function GET(req: Request) {
       );
     }
 
-    console.log("Fetching invoices for user:", userAddress);
+    console.log("Fetching invoices for user");
     const invoices = await Invoice.find({ userAddress }).sort({
       createdAt: -1,
     });
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Invalid data" }, { status: 400 });
     }
 
-    console.log("Processing invoice creation for:", body);
+    console.log("Processing invoice creation for");
 
     // 1. Generate the Mileston invoice link.
     const invoiceLink = await generateMilestonInvoice({
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
       { userAddress, clientName, clientEmail, amount, currency },
       invoiceLink
     );
-    console.log("Invoice saved to DB:", newInvoice);
+    console.log("Invoice saved to DB");
 
     return NextResponse.json(newInvoice, { status: 201 });
   } catch (error: unknown) {

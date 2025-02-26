@@ -38,7 +38,7 @@ export default function InvoiceForm({
       });
 
       const data = await response.json();
-      console.log("API Response:", data);
+      console.log("API Response ok");
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to create invoice");
