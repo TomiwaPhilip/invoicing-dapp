@@ -8,14 +8,17 @@ if (!MONGO_URI) {
   );
 }
 
-// Correctly type the cached object
 interface MongooseCache {
   conn: Connection | null;
-  promise: Promise<typeof mongoose> | null;
+  promise: Promise<mongoose.Connection> | null;
 }
 
-// Use a globally cached connection to prevent multiple connections in dev mode
-const cached: MongooseCache = (global as any).mongoose || { conn: null, promise: null };
+// Ensure TypeScript understands `global` caching
+declare global {
+  var mongoose: MongooseCache | undefined;
+}
+
+const cached: MongooseCache = global.mongoose || { conn: null, promise: null };
 
 export async function connectDB(): Promise<Connection> {
   if (cached.conn) return cached.conn;
@@ -24,9 +27,10 @@ export async function connectDB(): Promise<Connection> {
     cached.promise = mongoose.connect(MONGO_URI, {
       dbName: "invoicing-dapp",
       bufferCommands: false,
-    });
+    }).then((mongooseInstance) => mongooseInstance.connection);
   }
 
-  cached.conn = (await cached.promise).connection; // Extracting `connection`
+  cached.conn = await cached.promise;
+  global.mongoose = cached;
   return cached.conn;
 }
