@@ -38,7 +38,7 @@ export default function Subscription({
     return <p>Connect your wallet to subscribe and see names in purple.</p>;
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg m-6">
       <h2 className="text-xl font-semibold mb-4">Premium Subscription</h2>
       {loading ? (
         <p>Loading...</p>

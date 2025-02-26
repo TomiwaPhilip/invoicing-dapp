@@ -1,14 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ConnectButton, useCurrentAccount } from "@mysten/dapp-kit";
 
 export default function WalletConnect() {
   const account = useCurrentAccount();
   const [loading, setLoading] = useState(false);
+  const [subscriptionActive, setSubscriptionActive] = useState(false);
+
+  useEffect(() => {
+    if (!account) return;
+
+    const fetchSubscription = async () => {
+      try {
+        const res = await fetch(
+          `/api/subscription?userAddress=${account.address}`
+        );
+        const data = await res.json();
+        setSubscriptionActive(data.status === "active");
+      } catch (error) {
+        console.error("Error fetching subscription:", error);
+      }
+    };
+
+    fetchSubscription();
+  }, [account]);
 
   const handleSubscribe = async () => {
-    if (!account) return;
+    if (!account || subscriptionActive) return;
     setLoading(true);
 
     try {
@@ -20,7 +39,7 @@ export default function WalletConnect() {
 
       const data = await res.json();
       if (data.milestonPaymentLink) {
-        window.location.href = data.milestonPaymentLink; // Redirect to Mileston checkout
+        window.location.href = data.milestonPaymentLink; // Redirect to checkout
       }
     } catch (error) {
       console.error("Subscription error:", error);
@@ -33,11 +52,17 @@ export default function WalletConnect() {
     <div className="flex items-center gap-4">
       <ConnectButton />
       <button
-        className="text-indigo-600 disabled:opacity-50"
+        className={`text-indigo-600 disabled:opacity-50 ${
+          subscriptionActive ? "cursor-not-allowed text-gray-500" : ""
+        }`}
         onClick={handleSubscribe}
-        disabled={loading}
+        disabled={subscriptionActive || loading}
       >
-        {loading ? "Processing..." : "Subscribe"}
+        {subscriptionActive
+          ? "Subscribed"
+          : loading
+          ? "Processing..."
+          : "Subscribe"}
       </button>
     </div>
   );
