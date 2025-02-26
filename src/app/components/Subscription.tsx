@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 
 export default function Subscription({
@@ -12,27 +12,27 @@ export default function Subscription({
   const [subscriptionActive, setSubscriptionActive] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const fetchSubscription = useCallback(async () => {
     if (!account) return;
 
-    const fetchSubscription = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `/api/subscription?userAddress=${account.address}`
-        );
-        const data = await res.json();
-        const isActive = data.status === "active";
-        setSubscriptionActive(isActive);
-        onSubscriptionUpdate(isActive);
-      } catch (error) {
-        console.error("Error fetching subscription:", error);
-      }
-      setLoading(false);
-    };
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `/api/subscription?userAddress=${account.address}`
+      );
+      const data = await res.json();
+      const isActive = data.status === "active";
+      setSubscriptionActive(isActive);
+      onSubscriptionUpdate(isActive);
+    } catch (error) {
+      console.error("Error fetching subscription:", error);
+    }
+    setLoading(false);
+  }, [account, onSubscriptionUpdate]);
 
+  useEffect(() => {
     fetchSubscription();
-  }, [account]);
+  }, [fetchSubscription]);
 
   if (!account)
     return <p className="m-2">Connect your wallet to subscribe and see names in purple.</p>;

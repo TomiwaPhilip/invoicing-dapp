@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { Invoice as MilestonInvoice } from "mileston-payments";
 
@@ -31,48 +31,45 @@ export default function InvoiceList({
     process.env.NEXT_PUBLIC_MILESTON_BUSINESS_ID || ""
   );
 
-  useEffect(() => {
+  const fetchInvoices = useCallback(async () => {
     if (!account) return;
 
-    const fetchInvoices = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/invoices?userAddress=${account.address}`);
-        const data: InvoiceData[] = await res.json();
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/invoices?userAddress=${account.address}`);
+      const data: InvoiceData[] = await res.json();
 
-        if (milestonApiKey && businessId) {
-          const invoiceApi = new MilestonInvoice(milestonApiKey, businessId);
-          const updatedInvoices = await Promise.all(
-            data.map(async (invoice) => {
-              if (invoice.invoiceLink) {
-                try {
-                  const response = await invoiceApi.get(invoice.invoiceLink);
-                  console.log("Mileston Invoice Response ok");
+      if (milestonApiKey && businessId) {
+        const invoiceApi = new MilestonInvoice(milestonApiKey, businessId);
+        const updatedInvoices = await Promise.all(
+          data.map(async (invoice) => {
+            if (invoice.invoiceLink) {
+              try {
+                const response = await invoiceApi.get(invoice.invoiceLink);
+                console.log("Mileston Invoice Response ok");
 
-                  const status = (response as any)?.status || "pending";
-                  return { ...invoice, status };
-                } catch (error) {
-                  console.error(
-                    "Error fetching Mileston invoice status:",
-                    error
-                  );
-                }
+                const status = (response as any)?.status || "pending";
+                return { ...invoice, status };
+              } catch (error) {
+                console.error("Error fetching Mileston invoice status:", error);
               }
-              return invoice;
-            })
-          );
-          setInvoices(updatedInvoices);
-        } else {
-          setInvoices(data);
-        }
-      } catch (error) {
-        console.error("Error fetching invoices:", error);
+            }
+            return invoice;
+          })
+        );
+        setInvoices(updatedInvoices);
+      } else {
+        setInvoices(data);
       }
-      setLoading(false);
-    };
+    } catch (error) {
+      console.error("Error fetching invoices:", error);
+    }
+    setLoading(false);
+  }, [account, milestonApiKey, businessId]);
 
+  useEffect(() => {
     fetchInvoices();
-  }, [account, refresh, milestonApiKey, businessId]);
+  }, [fetchInvoices, refresh]);
 
   return (
     <div>
@@ -97,13 +94,6 @@ export default function InvoiceList({
               <p className="text-sm text-gray-500">
                 {new Date(invoice.createdAt).toLocaleString()}
               </p>
-              {/* <p
-                className={`mt-2 font-medium ${
-                  invoice.status === "paid" ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {invoice.status === "paid" ? "Paid" : "Pending"}
-              </p> */}
             </li>
           ))}
         </ul>

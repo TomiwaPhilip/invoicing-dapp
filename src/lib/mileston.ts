@@ -12,15 +12,11 @@ if (!apiKey || !businessId) {
 }
 
 export async function createMilestonInvoice({
-  clientName,
   clientEmail,
   amount,
-  currency,
 }: {
-  clientName: string;
   clientEmail: string;
   amount: number;
-  currency: string;
 }): Promise<{ invoiceLink: string } | null> {
   try {
     console.log("Creating Mileston invoice");
