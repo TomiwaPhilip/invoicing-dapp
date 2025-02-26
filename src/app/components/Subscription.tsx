@@ -35,7 +35,7 @@ export default function Subscription({
   }, [account]);
 
   if (!account)
-    return <p>Connect your wallet to subscribe and see names in purple.</p>;
+    return <p className="m-2">Connect your wallet to subscribe and see names in purple.</p>;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg m-6">
