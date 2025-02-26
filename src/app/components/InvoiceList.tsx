@@ -14,12 +14,6 @@ interface InvoiceData {
   invoiceLink?: string;
 }
 
-// Ensure `status` is present in the expected response
-interface InvoiceResponse {
-  status: string;
-}
-
-// Use `unknown` first and validate before casting
 export default function InvoiceList({
   refresh,
   isSubscribed,
@@ -56,7 +50,7 @@ export default function InvoiceList({
 
                   console.log("Mileston Invoice Response ok");
 
-                  // Type guard to ensure response has 'status'
+                  // Ensure response contains 'status'
                   if (
                     response &&
                     typeof response === "object" &&
