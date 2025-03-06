@@ -8,10 +8,8 @@ if (!MONGO_URI) {
   );
 }
 
-// Fix: Use `const` instead of `let`
 const globalWithMongoose = global as unknown as { mongoose?: { conn: mongoose.Mongoose | null; promise: Promise<mongoose.Mongoose> | null } };
 
-// Fix: Remove `any` by using explicit types
 const cached = globalWithMongoose.mongoose || { conn: null, promise: null };
 
 export async function connectDB(): Promise<mongoose.Mongoose> {
@@ -27,6 +25,4 @@ export async function connectDB(): Promise<mongoose.Mongoose> {
   cached.conn = await cached.promise;
   return cached.conn;
 }
-
-// Store the cached connection globally to prevent multiple connections in development
 globalWithMongoose.mongoose = cached;

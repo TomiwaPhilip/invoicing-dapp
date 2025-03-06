@@ -1,9 +1,8 @@
-import { Invoice } from "mileston-payments";
+import { Invoice, PaymentLink } from "mileston-payments";
 
 const apiKey: string = process.env.MILESTON_API_KEY ?? "";
-const businessId: string = process.env.MILESTON_BUSINESS_ID ?? "semilogopaul";
-const businessName: string =
-  process.env.MILESTON_BUSINESS_NAME ?? "semilogopaul";
+const businessId: string = process.env.MILESTON_BUSINESS_ID ?? "";
+const businessName: string = process.env.MILESTON_BUSINESS_NAME ?? "";
 
 if (!apiKey || !businessId) {
   throw new Error(
@@ -11,6 +10,9 @@ if (!apiKey || !businessId) {
   );
 }
 
+/**
+ * Creates an invoice and returns its invoice link.
+ */
 export async function createMilestonInvoice({
   clientEmail,
   amount,
@@ -41,6 +43,42 @@ export async function createMilestonInvoice({
     return { invoiceLink: response.invoiceLink };
   } catch (error) {
     console.error("Mileston API Error:", error);
+    return null;
+  }
+}
+
+/**
+ * Creates a subscription payment link and returns it.
+ */
+export async function createMilestonPaymentLink({
+  customerEmail,
+  amount,
+  description,
+}: {
+  customerEmail: string;
+  amount: string;
+  description: string;
+}): Promise<{ paymentLink: string } | null> {
+  try {
+    console.log("Creating Mileston payment link");
+
+    const paymentLinkSDK = new PaymentLink(apiKey, businessId);
+    const payload = {
+      amount,
+      description,
+      customerEmail,
+    };
+
+    const response = await paymentLinkSDK.create(payload);
+
+    if (!response || !response.paymentLink) {
+      console.error("Mileston response is missing a payment link.");
+      throw new Error("Mileston response is missing a payment link.");
+    }
+
+    return { paymentLink: response.paymentLink };
+  } catch (error) {
+    console.error("Mileston PaymentLink API Error:", error);
     return null;
   }
 }

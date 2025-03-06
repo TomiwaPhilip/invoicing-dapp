@@ -7,13 +7,14 @@ import { createMilestonInvoice } from "@/lib/mileston";
  * Helper function to generate the Mileston invoice link.
  */
 async function generateMilestonInvoice(body: {
-  clientName: string;
   clientEmail: string;
   amount: number;
-  currency: string;
 }): Promise<string | null> {
   try {
-    const result = await createMilestonInvoice(body);
+    const result = await createMilestonInvoice({
+      clientEmail: body.clientEmail,
+      amount: body.amount,
+    });
     if (result && result.invoiceLink) {
       return result.invoiceLink;
     }
@@ -97,14 +98,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Invalid data" }, { status: 400 });
     }
 
-    console.log("Processing invoice creation for");
+    console.log("Processing invoice creation for", clientEmail);
 
     // Generate the Mileston invoice link.
     const invoiceLink = await generateMilestonInvoice({
-      clientName,
       clientEmail,
       amount,
-      currency,
     });
 
     if (!invoiceLink) {

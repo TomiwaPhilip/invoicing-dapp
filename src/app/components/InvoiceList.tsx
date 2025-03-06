@@ -50,7 +50,6 @@ export default function InvoiceList({
 
                   console.log("Mileston Invoice Response ok");
 
-                  // Ensure response contains 'status'
                   if (
                     response &&
                     typeof response === "object" &&

@@ -2,7 +2,7 @@
 
 import "@mysten/dapp-kit/dist/index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import dynamic from "next/dynamic"; // Fixed conflicting 'dynamic' import
+import dynamic from "next/dynamic"; 
 import { getFullnodeUrl } from "@mysten/sui/client";
 import { SuiProvider } from "./providers/SuiProvider";
 import "./globals.css";
@@ -14,7 +14,6 @@ const networks = {
   mainnet: { url: getFullnodeUrl("mainnet") },
 };
 
-// Use dynamic import to prevent SSR issues with @mysten/dapp-kit
 const SuiClientProvider = dynamic(
   () => import("@mysten/dapp-kit").then((mod) => mod.SuiClientProvider),
   { ssr: false }
