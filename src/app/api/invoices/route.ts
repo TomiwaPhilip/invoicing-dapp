@@ -98,7 +98,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Invalid data" }, { status: 400 });
     }
 
-    console.log("Processing invoice creation for", clientEmail);
+    console.log("Processing invoice creation for user");
 
     // Generate the Mileston invoice link.
     const invoiceLink = await generateMilestonInvoice({

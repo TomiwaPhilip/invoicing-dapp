@@ -39,8 +39,6 @@ export async function POST(req: Request) {
       expiresAt,
       status: "active",
     });
-
-    console.log("Corrected Payment Link:", correctedPaymentLink);
     
     return NextResponse.json(
       {
