@@ -23,19 +23,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fix the missing slash in the payment link
-    const correctedPaymentLink = paymentLinkResult.paymentLink.replace(
-      /(payment-link)(\w+-)/,
-      "$1/$2"
-    );
-
     const expiresAt = new Date();
     expiresAt.setMonth(expiresAt.getMonth() + 1);
 
-    // Save the subscription details (including the corrected Mileston link) to the database.
+    // Save the subscription details to the database.
     const subscription = await Subscription.create({
       userAddress,
-      milestonPaymentLink: correctedPaymentLink,
+      milestonPaymentLink: paymentLinkResult.paymentLink,
       expiresAt,
       status: "active",
     });
@@ -43,7 +37,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         message: "Subscription payment link created successfully",
-        paymentLink: correctedPaymentLink,
+        paymentLink: paymentLinkResult.paymentLink,
         subscription,
       },
       { status: 201 }
