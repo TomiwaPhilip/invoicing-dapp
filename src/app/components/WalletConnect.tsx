@@ -36,9 +36,9 @@ export default function WalletConnect() {
       const res = await fetch("/api/subscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          userAddress: account.address, 
-          customerEmail 
+        body: JSON.stringify({
+          userAddress: account.address,
+          customerEmail,
         }),
       });
 
@@ -59,8 +59,10 @@ export default function WalletConnect() {
       <ConnectButton />
 
       <button
-        className={`text-indigo-500 font-semibold bg-white border border-indigo-500 px-4 py-2 rounded-md transition hover:bg-indigo-500 hover:text-white disabled:opacity-50 ${
-          !account ? "cursor-not-allowed opacity-50" : ""
+        className={`text-indigo-500 font-semibold bg-white border border-indigo-500 px-4 py-2 rounded-md transition ${
+          !account || subscriptionActive || loading
+            ? "cursor-not-allowed opacity-50"
+            : "hover:bg-indigo-500 hover:text-white"
         }`}
         onClick={() => account && setIsModalOpen(true)}
         disabled={!account || subscriptionActive || loading}
