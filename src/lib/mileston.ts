@@ -24,6 +24,11 @@ export async function createMilestonInvoice({
     console.log("Creating Mileston invoice");
 
     const formattedAmount = parseFloat(amount.toString()).toFixed(2);
+    console.log("Api Key:", apiKey);
+    console.log("Business ID:", businessId);
+    console.log("Business Name:", businessName);
+    console.log("Client Email:", clientEmail);
+    console.log("Amount:", formattedAmount);
 
     const invoiceSDK = new Invoice(apiKey, businessId);
     const response = await invoiceSDK.create(businessName, {

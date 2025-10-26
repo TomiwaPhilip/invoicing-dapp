@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 interface Invoice {
   _id: string;
@@ -14,17 +14,18 @@ interface Invoice {
 }
 
 export default function Invoices() {
-  const account = useCurrentAccount();
+  const { publicKey } = useWallet();
+  const accountAddress = publicKey?.toString();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!account) return;
+  if (!accountAddress) return;
 
     const fetchInvoices = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/invoices?userAddress=${account.address}`);
+  const res = await fetch(`/api/invoices?userAddress=${accountAddress}`);
         const data = await res.json();
         setInvoices(data);
       } catch (error) {
@@ -34,9 +35,9 @@ export default function Invoices() {
     };
 
     fetchInvoices();
-  }, [account]);
+  }, [accountAddress]);
 
-  if (!account) return <p>Connect your wallet to see invoices.</p>;
+  if (!accountAddress) return <p>Connect your wallet to see invoices.</p>;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-2xl">

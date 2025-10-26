@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
     config.resolve.fallback = { fs: false };
     return config;
   },
-  serverExternalPackages: ["@mysten/dapp-kit"],
 };
 
 export default nextConfig;

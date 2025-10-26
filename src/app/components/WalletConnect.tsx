@@ -1,23 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ConnectButton, useCurrentAccount } from "@mysten/dapp-kit";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function WalletConnect() {
-  const account = useCurrentAccount();
+  const { publicKey, connected } = useWallet();
+  const accountAddress = publicKey?.toString();
   const [loading, setLoading] = useState(false);
   const [subscriptionActive, setSubscriptionActive] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [customerEmail, setCustomerEmail] = useState("");
 
   useEffect(() => {
-    if (!account) return;
+    if (!accountAddress) return;
 
     const fetchSubscription = async () => {
       try {
-        const res = await fetch(
-          `/api/subscription?userAddress=${account.address}`
-        );
+        const res = await fetch(`/api/subscription?userAddress=${accountAddress}`);
         const data = await res.json();
         setSubscriptionActive(data.status === "active");
       } catch (error) {
@@ -26,10 +26,10 @@ export default function WalletConnect() {
     };
 
     fetchSubscription();
-  }, [account]);
+  }, [accountAddress]);
 
   const handleSubscribe = async () => {
-    if (!account || subscriptionActive || !customerEmail.trim()) return;
+    if (!accountAddress || subscriptionActive || !customerEmail.trim()) return;
     setLoading(true);
 
     try {
@@ -37,7 +37,7 @@ export default function WalletConnect() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userAddress: account.address,
+          userAddress: accountAddress,
           customerEmail,
         }),
       });
@@ -56,18 +56,18 @@ export default function WalletConnect() {
 
   return (
     <div className="flex flex-row items-center gap-4">
-      <ConnectButton />
+      <WalletMultiButton />
 
       <button
         className={`text-indigo-500 font-semibold bg-white border border-indigo-500 px-4 py-2 rounded-md transition ${
-          !account || subscriptionActive || loading
+          !connected || subscriptionActive || loading
             ? "cursor-not-allowed opacity-50"
             : "hover:bg-indigo-500 hover:text-white"
         }`}
-        onClick={() => account && setIsModalOpen(true)}
-        disabled={!account || subscriptionActive || loading}
+        onClick={() => connected && setIsModalOpen(true)}
+        disabled={!connected || subscriptionActive || loading}
       >
-        {!account
+        {!connected
           ? "Subscribe"
           : subscriptionActive
           ? "Subscribed"

@@ -1,25 +1,24 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function Subscription({
   onSubscriptionUpdate,
 }: {
   onSubscriptionUpdate: (status: boolean) => void;
 }) {
-  const account = useCurrentAccount();
+  const { publicKey } = useWallet();
+  const accountAddress = publicKey?.toString();
   const [subscriptionActive, setSubscriptionActive] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const fetchSubscription = useCallback(async () => {
-    if (!account) return;
+    if (!accountAddress) return;
 
     setLoading(true);
     try {
-      const res = await fetch(
-        `/api/subscription?userAddress=${account.address}`
-      );
+      const res = await fetch(`/api/subscription?userAddress=${accountAddress}`);
       const data = await res.json();
       const isActive = data.status === "active";
       setSubscriptionActive(isActive);
@@ -28,14 +27,16 @@ export default function Subscription({
       console.error("Error fetching subscription:", error);
     }
     setLoading(false);
-  }, [account, onSubscriptionUpdate]);
+  }, [accountAddress, onSubscriptionUpdate]);
 
   useEffect(() => {
     fetchSubscription();
   }, [fetchSubscription]);
 
-  if (!account)
-    return <p className="m-2">Connect your wallet to subscribe and see names in purple.</p>;
+  if (!accountAddress)
+    return (
+      <p className="m-2">Connect your wallet to subscribe and see names in purple.</p>
+    );
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg m-6">

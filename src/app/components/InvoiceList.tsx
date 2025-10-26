@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { Invoice as MilestonInvoice } from "mileston-payments";
 
 interface InvoiceData {
@@ -21,7 +21,8 @@ export default function InvoiceList({
   refresh: boolean;
   isSubscribed: boolean;
 }) {
-  const account = useCurrentAccount();
+  const { publicKey } = useWallet();
+  const accountAddress = publicKey?.toString();
   const [invoices, setInvoices] = useState<InvoiceData[]>([]);
   const [loading, setLoading] = useState(false);
   const [milestonApiKey] = useState(
@@ -32,12 +33,12 @@ export default function InvoiceList({
   );
 
   useEffect(() => {
-    if (!account) return;
+  if (!accountAddress) return;
 
     const fetchInvoices = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/invoices?userAddress=${account.address}`);
+  const res = await fetch(`/api/invoices?userAddress=${accountAddress}`);
         const data: InvoiceData[] = await res.json();
 
         if (milestonApiKey && businessId) {
@@ -84,7 +85,7 @@ export default function InvoiceList({
     };
 
     fetchInvoices();
-  }, [account, refresh, milestonApiKey, businessId]);
+  }, [accountAddress, refresh, milestonApiKey, businessId]);
 
   return (
     <div>

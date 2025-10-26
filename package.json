@@ -9,13 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mysten/dapp-kit": "^0.14.50",
-    "@mysten/sui": "^1.21.2",
+    "@solana/wallet-adapter-react": "^0.15.39",
+    "@solana/wallet-adapter-react-ui": "^0.9.39",
+    "@solana/wallet-adapter-wallets": "^0.19.37",
+    "@solana/web3.js": "^1.98.4",
     "@tanstack/react-query": "^5.66.0",
     "axios": "^1.7.9",
-    "mileston-payment-client": "^0.3.2",
-    "mileston-payments": "^0.1.2",
+    "mileston-payment-client": "^0.9.3",
+    "mileston-payments": "^0.2.3",
     "mongoose": "^8.10.0",
+    "pino-pretty": "^13.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "valibot": "^0.35.0"
@@ -33,5 +36,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.16.1+sha512.0e155aa2629db8672b49e8475da6226aa4bdea85fdcdfdc15350874946d4f3c91faaf64cbdc4a5d1ab8002f473d5c3fcedcd197989cf0390f9badd3c04678706"
 }

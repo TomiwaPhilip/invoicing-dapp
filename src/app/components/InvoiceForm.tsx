@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export default function InvoiceForm({
   onInvoiceCreated,
 }: {
   onInvoiceCreated: () => void;
 }) {
-  const account = useCurrentAccount();
+  const { publicKey, connected } = useWallet();
+  const accountAddress = publicKey?.toString();
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [amount, setAmount] = useState("");
@@ -17,7 +18,7 @@ export default function InvoiceForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!account) {
+    if (!connected || !accountAddress) {
       alert("Connect your wallet first!");
       return;
     }
@@ -29,7 +30,7 @@ export default function InvoiceForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userAddress: account.address,
+          userAddress: accountAddress,
           clientName,
           clientEmail,
           amount,

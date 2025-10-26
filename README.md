@@ -15,6 +15,27 @@ pnpm dev
 bun dev
 ```
 
+# Wallet adapter change
+
+This project was refactored to use Solana Wallet Adapter and the Wallet Adapter React UI instead of the Sui Dapp Kit.
+
+After pulling these changes, install the new dependencies and run the dev server:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Added dependencies (in `package.json`):
+- @solana/web3.js
+- @solana/wallet-adapter-react
+- @solana/wallet-adapter-wallets
+- @solana/wallet-adapter-react-ui
+
+Notes:
+- The provider exported from `src/app/providers/SuiProvider.tsx` now initializes Solana Connection + WalletProvider (kept name to minimize code changes).
+- Wallet UI styles are imported in `src/app/layout.tsx`.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
