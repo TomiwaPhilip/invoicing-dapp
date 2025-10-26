@@ -49,6 +49,8 @@ export default function InvoiceForm({
       setClientEmail("");
       setAmount("");
       setCurrency("USDC");
+      // Notify the user of success
+      alert("Invoice created successfully. Your client will receive an email shortly.");
       onInvoiceCreated();
     } catch (error: unknown) {
       console.error("Error creating invoice:", error);
